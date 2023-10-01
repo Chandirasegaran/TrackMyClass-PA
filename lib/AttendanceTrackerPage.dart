@@ -12,6 +12,7 @@ import 'qr_scanner_page.dart';
 import 'attendance_list_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:share/share.dart';
 
 class AttendanceTrackerPage extends StatefulWidget {
   const AttendanceTrackerPage({Key? key}) : super(key: key);
@@ -91,6 +92,9 @@ class _AttendanceTrackerPageState extends State<AttendanceTrackerPage> {
       final file = File('${directory!.path}/$fileName');
       await file.writeAsString(csvData);
 
+      // Share the exported file
+      Share.shareFiles([file.path], text: 'Exported data for $className');
+
       // Show a snackbar to indicate successful export
       final snackBar = SnackBar(
         content: Text('Exported data to $fileName'),
@@ -135,6 +139,11 @@ class _AttendanceTrackerPageState extends State<AttendanceTrackerPage> {
         final file = File('${directory!.path}/$fileName');
         await file.writeAsString(csvData);
 
+        // Share the exported file
+        Share.shareFiles([file.path],
+            text:
+                'Exported data for $className on ${DateFormat('dd-MM-yy').format(selectedDate)}');
+
         // Show a snackbar to indicate successful export
         final snackBar = SnackBar(
           content: Text('Exported data to $fileName'),
@@ -149,6 +158,86 @@ class _AttendanceTrackerPageState extends State<AttendanceTrackerPage> {
       }
     }
   }
+  // Future<void> _exportAllData(String className) async {
+  //   final dbHelper = DatabaseHelper();
+  //   final attendanceData =
+  //       await dbHelper.getAttendanceForExport(className, null);
+  //
+  //   if (attendanceData.isNotEmpty) {
+  //     final csvData = const ListToCsvConverter().convert(
+  //       attendanceData
+  //           .map((entry) => [
+  //                 entry.registerNumber,
+  //                 DateFormat('yyyy-MM-dd').format(entry.currentDate)
+  //               ])
+  //           .toList(),
+  //     );
+  //
+  //     final fileName =
+  //         'TMC-ExportAll-${className}-${DateFormat('dd-MM-yy-HH-mm').format(DateTime.now())}.csv';
+  //
+  //     final directory = await getExternalStorageDirectory();
+  //     final file = File('${directory!.path}/$fileName');
+  //     await file.writeAsString(csvData);
+  //
+  //     // Show a snackbar to indicate successful export
+  //     final snackBar = SnackBar(
+  //       content: Text('Exported data to $fileName'),
+  //     );
+  //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  //   } else {
+  //     // Show a snackbar to indicate no data to export
+  //     final snackBar = SnackBar(
+  //       content: Text('No data to export for $className'),
+  //     );
+  //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  //   }
+  // }
+  //
+  // Future<void> _selectAndExportSpecificDate(String className) async {
+  //   final DateTime? selectedDate = await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime(2020),
+  //     lastDate: DateTime(2030),
+  //   );
+  //
+  //   if (selectedDate != null) {
+  //     final dbHelper = DatabaseHelper();
+  //     final attendanceData =
+  //         await dbHelper.getAttendanceForExport(className, selectedDate);
+  //
+  //     if (attendanceData.isNotEmpty) {
+  //       final csvData = const ListToCsvConverter().convert(
+  //         attendanceData
+  //             .map((entry) => [
+  //                   entry.registerNumber,
+  //                   DateFormat('yyyy-MM-dd').format(entry.currentDate)
+  //                 ])
+  //             .toList(),
+  //       );
+  //
+  //       final fileName =
+  //           'TMC-Export-${className}-${DateFormat('dd-MM-yy').format(selectedDate)}.csv';
+  //
+  //       final directory = await getExternalStorageDirectory();
+  //       final file = File('${directory!.path}/$fileName');
+  //       await file.writeAsString(csvData);
+  //
+  //       // Show a snackbar to indicate successful export
+  //       final snackBar = SnackBar(
+  //         content: Text('Exported data to $fileName'),
+  //       );
+  //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  //     } else {
+  //       // Show a snackbar to indicate no data to export
+  //       final snackBar = SnackBar(
+  //         content: Text('No data to export for $className on $selectedDate'),
+  //       );
+  //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  //     }
+  //   }
+  // }
 
   // Save class data to SharedPreferences whenever it changes
   void _saveClassData() async {
