@@ -30,6 +30,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  shared_preferences: ^2.0.10
+  qr_code_scanner: ^1.0.1 # Use the latest version
+  excel: ^2.0.4
+  sqflite: ^2.3.0
+  intl: ^0.18.1
+  csv: ^5.0.2
+  path_provider: ^2.1.1
+  file_picker: ^5.5.0
+  permission_handler: ^11.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
